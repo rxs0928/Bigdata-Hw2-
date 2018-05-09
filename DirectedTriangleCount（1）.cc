@@ -1,6 +1,6 @@
 
-/* 3, 201728018670243, RenXueshuang */
-/* It's a big pity that the program is reported segmentation fault, but i did not find the reason of the problem.  */
+/* This file utilizes struct and array, which idea is simple, but code is longer.*/
+/* There is a problem of repeated counting.  */
 
 
 #include <stdio.h>
@@ -10,8 +10,6 @@
 #include "GraphLite.h"
 
 #define VERTEX_CLASS_NAME(name)  DirectedTriangleCount##name
-
-#define EPS 1e-6
 
 #define MAX 10000000
 
@@ -347,7 +345,7 @@ public:
         m_pin_path = argv[1];
         m_pout_path = argv[2];
 
-        aggregator = new VERTEX_CLASS_NAME(Aggregator)[1];
+        aggregator = new VERTEX_CLASS_NAME(Aggregator)[4];////writable
         regNumAggr(4);
         regAggr(0, &aggregator[0]);
 	regAggr(1, &aggregator[1]);

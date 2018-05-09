@@ -192,9 +192,9 @@ public:
          
                            
         else if (getSuperstep() >= 3){
-            in = * (int *)getAggrGlobal(0)/2;
-            out = * (int *)getAggrGlobal(0)/2;
-            through = * (int *)getAggrGlobal(0)/2;
+            in = * (int *)getAggrGlobal(0);
+            out = * (int *)getAggrGlobal(0);
+            through = * (int *)getAggrGlobal(0);
             cycle = * (int *)getAggrGlobal(1);
             
             voteToHalt(); 

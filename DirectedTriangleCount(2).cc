@@ -1,6 +1,6 @@
-/* 3, 201728018670243, RenXueshuang */
+
 /* This fille is intend to count directed triangles in graph.*/
-/* This is version 3, which utilizes map<> and set<> instead of structure and array,greatly simplify the code, */
+/* This is version 2, which utilizes map<> and set<> instead of structure and array,greatly simplify the code, */
 /* It needs 4 superstep */
 
 

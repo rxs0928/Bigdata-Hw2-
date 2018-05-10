@@ -1,0 +1,151 @@
+》》》》》上传文件到hadoop《《《《《
+
+1.cd 切换到Hadoop根目录（包含bin等文件）
+
+2.hadoop fs ls /hw2   （查看文件夹hw2下的文件）
+3.hadoop fs -rm /文件2的路径   （删除文件2）
+4.hadoop fs mydir  (创建文件夹)
+4.hadoop fs put /本地文件路径   /hadoop上的文件夹 （上传文件到对应文件夹）
+
+》》》》》运行Hw2Part1.java《《《《《
+
+(先上传测试文件到hadoop的指定位置，然后下面操作)
+
+1. start hadoop
+
+   $ start-dfs.sh
+   $ start-yarn.sh
+
+2. Example: WordCount.java
+
+   (1) edit WordCount.java  (have a look at the code)
+
+   (2) edit WordCount-manifest.txt (have a look at this)
+
+   (3) compile and generate jar
+   $ rm -f *.class *.jar
+   $ javac Hw2Part1.java
+   $ jar cfm Hw2Part1.jar Hw2Part1-manifest.txt Hw2Part1*.class
+
+   (4) remove output hdfs directory then run MapReduce job
+   $ hdfs dfs -rm -f -r /hw2/output
+   $ hadoop jar ./Hw2Part1.jar /hw2/example-input.txt /hw2/output
+
+   (5) display output
+   $ hdfs dfs -cat '/hw2/output/part-*'
+
+3. Homework 2 part 1 specification
+
+  (1) java class name: Hw2Part1
+
+  (2) command line:
+
+  $ hadoop jar ./Hw2Part1.jar <input file> <output directory>
+
+  <input file> : on hdfs
+  <output directory> : on hdfs, it is removed before running the command
+
+  (3) input file format
+  every line consists of 3 fields separated by space:
+
+     <source> <destination> <duration>
+
+  (4) output file format
+  every line should consist of four fields:
+
+     <source> <destination> <count> <average duration>
+
+  the four fields are sparated by either space or tab
+
+》》》》》运行PageRankVertex.cc（需要用到GraphLite-0.20）《《《《《
+
+1. cd /home/guest/work/hw2/GraphLite-0.20 
+
+2. source bin/setenv
+
+3. 
+   make
+   cd /home/guest/work/hw2/GraphLite-0.20
+
+4. cd example
+   make
+   cd /home/guest/work/hw2/GraphLite-0.20
+
+5. killall -9 graphlite
+
+6. start-graphlite example/PageRankVertex.so Input/facebookcombined_4w Output/out
+
+ 输入四次密码（bdms），因为PageRankVertex.cc declares 5 processes, including 1 master and 4 workers.
+   So the input graph file is prepared as four files: Input/facebookcombined_4w_[1-4]
+
+   The output of PageRank will be in: Output/out_[1-4]
+
+   Workers generate log files in WorkOut/worker*.out
+
+------------------------------------------------------------
+Write Vertex Program
+------------------------------------------------------------
+Please refer to PageRankVertex.cc
+
+1. change VERTEX_CLASS_NAME(name) definition to use a different class name
+
+2. VERTEX_CLASS_NAME(InputFormatter) can be kept as is
+
+3. VERTEX_CLASS_NAME(OutputFormatter): this is where the output is generated
+
+4. VERTEX_CLASS_NAME(Aggregator): you can implement other types of aggregation
+
+5. VERTEX_CLASS_NAME(): the main vertex program with compute()
+   
+6. VERTEX_CLASS_NAME(Graph): set the running configuration here
+
+7. Modify Makefile:
+   EXAMPLE_ALGOS=PageRankVertex
+
+   if your program is your_program.cc, then 
+   EXAMPLE_ALGOS=your_program
+
+   make will produce your_program.so
+
+------------------------------------------------------------
+Use Hash Partitioner
+------------------------------------------------------------
+
+ bin/hash-partitioner.pl can be used to divide a graph input
+ file into multiple partitions.
+
+  $ hash-partitioner.pl Input/facebookcombined 4
+
+  will generate: Input/facebookcombined_4w_[1-4]
+
+
+
+--------------------------------------------------------
+安装与配置Hadoop环境（具体参考csdn博客）
+--------------------------------------------------------
+
+1.打开虚拟机终端，输入： java -version
+输出：java version "1.7.0_40"（表明Java环境已就绪）
+
+2.安装ssh服务器
+输入sudo apt-get install openssh-server（随后输入两次y）
+
+3.使用ssh进行无密码验证登录
+输入：ssh-keygen -t rsa -P '' 随后出现一个图形，即密码
+输入：cat ~/.ssh/id_rsa.pub>>authorized_keys
+输入：ssh localhost 
+便可以无密码验证登陆了
+ 
+4. 从网上下载了Hadoop2.6.5安装包，存放在hw2文件夹下。
+（1）切换到划hw2目录下，解压，仍存放在本目录下：
+guest@ubuntu-BDMS:~/work/hw2$ tar -zxf hadoop-2.6.5.tar.gz 
+
+（2）检查hadoop是否可用，
+输入：cd hadoop-2.6.5
+输入：./bin/hadoop version 
+成功显示Hadoop版本信息。
+
+5.创建hadoop用户
+
+
+

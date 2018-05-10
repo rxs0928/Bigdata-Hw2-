@@ -1,0 +1,193 @@
+
+（1）DirectedTriangleCount _version1 设计思路
+
+首先声明结构体，包含：自身ownID，出边邻居ID[]，入边邻居ID[]
+
+声明三角形计数变量;
+
+compute()的每一步都计算自身ID,出边邻居ID[]，
+
+
+第一个超步：计算自身ID,出边邻居ID[]（第一个元素为个数）,存入结构体，其他初始化为0，
+
+
+	将结构体保存为节点的值，并通过消息发给所有的出边邻居，即节点值类型和消息类型均为结构体；
+
+第二个超步：获取节点的值，即结构体，
+
+		遍历消息，提取消息结构体的第一个元素即入边邻居ID，构成一个数组[]（第一个元素为个数）,存入自己的结构体，修改节点的值。
+		
+		然后将结构体通过多次消息发给所有的邻居
+	
+第三个超步：节点根据收到的消息（多个结构体），创建相应大小的消息数组，将收到的所有消息存入数组；
+
+		分别遍历inneighbor,outneighbor来统计四种类型的三角形个数
+
+缺点：方法比较笨，代码冗长
+
+函数说明：
+
+accumulateAggr( , ) /*accumulateAggr(int aggr, const void* p) 累加局部统计量
+
+getAggrGlobal( ) /*getAggrGlobal(int aggr) 获取全局统计量
+
+
+
+OutputFormatter.h包含 ResultIterator ：
+	getIdValue(int64_t& vid, void* pvalue);
+	next(); /** Go to visit next element. */
+	done();/**true done     * @ false not  */
+	open(const char* pout_path);
+         close();
+	 writeNextResLine(char* pbuffer, int len); /*** Write next result line, for user.
+   						  * Write to current file offset.
+    						 * @param pbuffer buffer of result line in string
+     						* @param len length of result line string
+   
+    virtual void writeResult() = 0;  /** Write local subgraph computation result, pure virtual method. */
+    virtual ~OutputFormatter() {}      /** Destructor, virtual method. */
+
+
+
+pmsgs 接收消息迭代器的专门指针
+
+class OutEdgeIterator包含
+ 	OutEdgeIterator(）、
+	int64_t   target()返回出边邻居的ID
+	EdgeValue&   getValue() 返回出边上的数值
+
+int getVSize() const 获取节点值类型的size
+int getESize() const 获取边值类型的size
+
+int getMSize() const  获取消息值类型的size
+
+int getSuperstep() const 获取超步数
+
+int64_t getVertexId() const 获取节点ID
+
+voteToHalt() 将节点变为非活跃状态
+
+const VertexValue& getValue() 获取节点的值
+
+VertexValue* mutableValue() 改变节点的值
+
+OutEdgeIterator getOutEdgeIterator() 获取出边的迭代器
+
+void sendMessageTo(int64_t dest_vertex, const MessageValue& message)向目标节点发送特定内容的消息
+
+void sendMessageToAllNeighbors(const MessageValue& message)向所有出边邻居节点发送相同的消息
+
+
+
+
+调用用户自定义的partitioner对图中的点进行分片（点ID哈希后对Worker数取模），分配到相应的Worker
+
+1. Master和 Workers 如何使用 AggregatorBase?
+
+Aggregator包含全局变量和局部变量两种类型。分别用m_global和m_local表示。
+
+master修改全局变量
+worker修改局部变量，并将局部变量提交给master。
+master收集到所有局部变量后，将其合并为全局变量。
+
+2.Master 和 Workers都会调用Graph::init()方法，该方法使用regNumAggr(), regAggr() 将该系统在Aggregator上完成登记。
+Master 和 Workers都会使用regAggr()中的Aggregator对象来执行计算
+Master 和 Workers都会使用AggregatorBase::getSize()获得Aggregator的数据尺寸，使得the values can be communicated between Master and
+   Workders.
+
+3.在每个超步中:
+（1）Master 会调用AggregatorBase::getGlobal()方法获取当前的全局状态值，然后在超步开始消息中将
+全局数据发送给所有worker
+
+（2）当一个worker收到超步开始消息，首先提取全局状态数据，然后调用AggregatorBase::setGlobal()方法
+将该全局状态数据拷贝到本地的Aggregator中。
+
+（3）当vertex compute() 调用getAggrGlobal()，将返回只读的全局状态数据，反映上一个超步
+最后的全局数据。
+
+（4）当vertex compute() 调用 accumulateAggr()，接着worker调用AggregatorBase::accumulate()，
+用于将新的数据累加到原来的局部数据上。
+
+（5）在一个超步的结尾，每个worker调用AggregatorBase::getLocal()获取局部数据，然后
+向master发送一个超步结束消息（包含Aggregator的局部数据）
+
+（6）当收到一个超步结束消息，master提取其中的局部数据，并调用AggregatorBase::merge()
+将局部数据合并为全局数据。
+
+4.AggregatorBase::init()
+master会在3（1）之后调用AggregatorBase::init()
+worker会在3（5）之后调用AggregatorBase::init()
+
+AggregatorBase::init()总是会清除局部数据，可能会清除全局数据
+
+如果每一个超步Aggregator都被清除，只要需要，就可以清除全局数据
+整个计算过程所有超步的Aggregator累加，则全局数据不清除，全局数据在class创建的时候被初始化。
+
+######class VERTEX_CLASS_NAME(InputFormatter): public InputFormatter { }中包含的函数：
+
+getVertexNum（）获取节点个数
+
+getEdgeNum() 获取边的个数
+
+getVertexValueSize() 获取节点数值的大小？节点数值是什么？
+
+getEdgeValueSize() 获取边数值的大小？边数值是什么？
+
+getMessageValueSize() 获取消息数值的大小？消息数值是什么？
+
+loadGraph() 加载有向无权图
+
+！！！！class VERTEX_CLASS_NAME(OutputFormatter): public OutputFormatter {}中包含的函数：
+
+writeResult()输出结果，一行一行输出
+
+！！！！class VERTEX_CLASS_NAME(Aggregator): public Aggregator<double> {}中包含的函数：
+
+init()
+
+getGlobal() 
+
+setGlobal(const void* p) 
+
+getLocal() 
+
+setLocal(const void* p) 
+
+merge(const void* p)
+
+accumulate(const void* p)
+
+！！！！class VERTEX_CLASS_NAME(): public Vertex <double, double, double> {}中包含的函数：
+
+void compute(MessageIterator* pmsgs) 
+
+######class VERTEX_CLASS_NAME(Graph): public Graph {}包含配置函数，不用关心
+
+3. Group 3
+
+   #define VERTEX_CLASS_NAME(name) DirectedTriangleCount##name
+
+   command line:
+   $ start-graphlite example/your_program.so <input path> <output path>
+
+   input file:
+
+     num_vertex_in_this_partition
+     num_edge_in_this_partition
+     src_vertex_id dest_vertex_id
+     src_vertex_id dest_vertex_id
+     ... ...
+
+   output file: fields are separated by a single space
+
+     in: num_in
+     out: num_out
+     through: num_through
+     cycle: num_cycle
+
+4.Homework 2 Part 2 Test Commands 
+$ start-graphlite example/your_program.so ${GRAPHLITE_HOME}/part2-input/Triangle-graph0_4w ${GRAPHLITE_HOME}/out
+$ start-graphlite example/your_program.so ${GRAPHLITE_HOME}/part2-input/Triangle-graph1_4w ${GRAPHLITE_HOME}/out
+
+5.Note: Please use only English in comments.
+First line: /* group, studentId, nameInEnglish */

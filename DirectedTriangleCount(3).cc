@@ -176,7 +176,7 @@ public:
 			neinei.insert(msg);   
                   
                   for (vector<int64_t>::iterator iterr = Inneigh.begin(); iterr != Inneigh.end(); ++iterr){
-                    		if(*iter == *iterr)
+                    		if(msg == *iterr)
                     		{	accumulateAggr(0, &addition);  }                                       	
                     }      
                     

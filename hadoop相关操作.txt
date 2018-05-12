@@ -1,15 +1,15 @@
-¡·¡·¡·¡·¡·ÉÏ´«ÎÄ¼þµ½hadoop¡¶¡¶¡¶¡¶¡¶
+ã€‹ã€‹ã€‹ã€‹ã€‹ä¸Šä¼ æ–‡ä»¶åˆ°hadoopã€Šã€Šã€Šã€Šã€Š
 
-1.cd ÇÐ»»µ½Hadoop¸ùÄ¿Â¼£¨°üº¬binµÈÎÄ¼þ£©
+1.cd åˆ‡æ¢åˆ°Hadoopæ ¹ç›®å½•ï¼ˆåŒ…å«binç­‰æ–‡ä»¶ï¼‰
 
-2.hadoop fs ls /hw2   £¨²é¿´ÎÄ¼þ¼Ðhw2ÏÂµÄÎÄ¼þ£©
-3.hadoop fs -rm /ÎÄ¼þ2µÄÂ·¾¶   £¨É¾³ýÎÄ¼þ2£©
-4.hadoop fs mydir  (´´½¨ÎÄ¼þ¼Ð)
-4.hadoop fs put /±¾µØÎÄ¼þÂ·¾¶   /hadoopÉÏµÄÎÄ¼þ¼Ð £¨ÉÏ´«ÎÄ¼þµ½¶ÔÓ¦ÎÄ¼þ¼Ð£©
+2.hadoop fs ls /hw2   ï¼ˆæŸ¥çœ‹æ–‡ä»¶å¤¹hw2ä¸‹çš„æ–‡ä»¶ï¼‰
+3.hadoop fs -rm /æ–‡ä»¶2çš„è·¯å¾„   ï¼ˆåˆ é™¤æ–‡ä»¶2ï¼‰
+4.hadoop fs mydir  (åˆ›å»ºæ–‡ä»¶å¤¹)
+4.hadoop fs put /æœ¬åœ°æ–‡ä»¶è·¯å¾„   /hadoopä¸Šçš„æ–‡ä»¶å¤¹ ï¼ˆä¸Šä¼ æ–‡ä»¶åˆ°å¯¹åº”æ–‡ä»¶å¤¹ï¼‰
 
-¡·¡·¡·¡·¡·ÔËÐÐHw2Part1.java¡¶¡¶¡¶¡¶¡¶
+ã€‹ã€‹ã€‹ã€‹ã€‹è¿è¡ŒHw2Part1.javaã€Šã€Šã€Šã€Šã€Š
 
-(ÏÈÉÏ´«²âÊÔÎÄ¼þµ½hadoopµÄÖ¸¶¨Î»ÖÃ£¬È»ºóÏÂÃæ²Ù×÷)
+(å…ˆä¸Šä¼ æµ‹è¯•æ–‡ä»¶åˆ°hadoopçš„æŒ‡å®šä½ç½®ï¼Œç„¶åŽä¸‹é¢æ“ä½œ)
 
 1. start hadoop
 
@@ -57,7 +57,7 @@
 
   the four fields are sparated by either space or tab
 
-¡·¡·¡·¡·¡·ÔËÐÐPageRankVertex.cc£¨ÐèÒªÓÃµ½GraphLite-0.20£©¡¶¡¶¡¶¡¶¡¶
+ã€‹ã€‹ã€‹ã€‹ã€‹è¿è¡ŒPageRankVertex.ccï¼ˆéœ€è¦ç”¨åˆ°GraphLite-0.20ï¼‰ã€Šã€Šã€Šã€Šã€Š
 
 1. cd /home/guest/work/hw2/GraphLite-0.20 
 
@@ -75,13 +75,15 @@
 
 6. start-graphlite example/PageRankVertex.so Input/facebookcombined_4w Output/out
 
- ÊäÈëËÄ´ÎÃÜÂë£¨bdms£©£¬ÒòÎªPageRankVertex.cc declares 5 processes, including 1 master and 4 workers.
+ è¾“å…¥å››æ¬¡å¯†ç ï¼ˆbdmsï¼‰ï¼Œå› ä¸ºPageRankVertex.cc declares 5 processes, including 1 master and 4 workers.
    So the input graph file is prepared as four files: Input/facebookcombined_4w_[1-4]
 
    The output of PageRank will be in: Output/out_[1-4]
 
    Workers generate log files in WorkOut/worker*.out
-
+   
+   start-graphlite example/DirectedTriangleCount.so ${GRAPHLITE_HOME}/part2-input/Triangle-graph0_4w ${GRAPHLITE_HOME}/out
+   start-graphlite example/DirectedTriangleCount.so ${GRAPHLITE_HOME}/part2-input/Triangle-graph1_4w ${GRAPHLITE_HOME}/out
 ------------------------------------------------------------
 Write Vertex Program
 ------------------------------------------------------------
@@ -121,31 +123,31 @@ Use Hash Partitioner
 
 
 --------------------------------------------------------
-°²×°ÓëÅäÖÃHadoop»·¾³£¨¾ßÌå²Î¿¼csdn²©¿Í£©
+å®‰è£…ä¸Žé…ç½®HadoopçŽ¯å¢ƒï¼ˆå…·ä½“å‚è€ƒcsdnåšå®¢ï¼‰
 --------------------------------------------------------
 
-1.´ò¿ªÐéÄâ»úÖÕ¶Ë£¬ÊäÈë£º java -version
-Êä³ö£ºjava version "1.7.0_40"£¨±íÃ÷Java»·¾³ÒÑ¾ÍÐ÷£©
+1.æ‰“å¼€è™šæ‹Ÿæœºç»ˆç«¯ï¼Œè¾“å…¥ï¼š java -version
+è¾“å‡ºï¼šjava version "1.7.0_40"ï¼ˆè¡¨æ˜ŽJavaçŽ¯å¢ƒå·²å°±ç»ªï¼‰
 
-2.°²×°ssh·þÎñÆ÷
-ÊäÈësudo apt-get install openssh-server£¨ËæºóÊäÈëÁ½´Îy£©
+2.å®‰è£…sshæœåŠ¡å™¨
+è¾“å…¥sudo apt-get install openssh-serverï¼ˆéšåŽè¾“å…¥ä¸¤æ¬¡yï¼‰
 
-3.Ê¹ÓÃssh½øÐÐÎÞÃÜÂëÑéÖ¤µÇÂ¼
-ÊäÈë£ºssh-keygen -t rsa -P '' Ëæºó³öÏÖÒ»¸öÍ¼ÐÎ£¬¼´ÃÜÂë
-ÊäÈë£ºcat ~/.ssh/id_rsa.pub>>authorized_keys
-ÊäÈë£ºssh localhost 
-±ã¿ÉÒÔÎÞÃÜÂëÑéÖ¤µÇÂ½ÁË
+3.ä½¿ç”¨sshè¿›è¡Œæ— å¯†ç éªŒè¯ç™»å½•
+è¾“å…¥ï¼šssh-keygen -t rsa -P '' éšåŽå‡ºçŽ°ä¸€ä¸ªå›¾å½¢ï¼Œå³å¯†ç 
+è¾“å…¥ï¼šcat ~/.ssh/id_rsa.pub>>authorized_keys
+è¾“å…¥ï¼šssh localhost 
+ä¾¿å¯ä»¥æ— å¯†ç éªŒè¯ç™»é™†äº†
  
-4. ´ÓÍøÉÏÏÂÔØÁËHadoop2.6.5°²×°°ü£¬´æ·ÅÔÚhw2ÎÄ¼þ¼ÐÏÂ¡£
-£¨1£©ÇÐ»»µ½»®hw2Ä¿Â¼ÏÂ£¬½âÑ¹£¬ÈÔ´æ·ÅÔÚ±¾Ä¿Â¼ÏÂ£º
+4. ä»Žç½‘ä¸Šä¸‹è½½äº†Hadoop2.6.5å®‰è£…åŒ…ï¼Œå­˜æ”¾åœ¨hw2æ–‡ä»¶å¤¹ä¸‹ã€‚
+ï¼ˆ1ï¼‰åˆ‡æ¢åˆ°åˆ’hw2ç›®å½•ä¸‹ï¼Œè§£åŽ‹ï¼Œä»å­˜æ”¾åœ¨æœ¬ç›®å½•ä¸‹ï¼š
 guest@ubuntu-BDMS:~/work/hw2$ tar -zxf hadoop-2.6.5.tar.gz 
 
-£¨2£©¼ì²éhadoopÊÇ·ñ¿ÉÓÃ£¬
-ÊäÈë£ºcd hadoop-2.6.5
-ÊäÈë£º./bin/hadoop version 
-³É¹¦ÏÔÊ¾Hadoop°æ±¾ÐÅÏ¢¡£
+ï¼ˆ2ï¼‰æ£€æŸ¥hadoopæ˜¯å¦å¯ç”¨ï¼Œ
+è¾“å…¥ï¼šcd hadoop-2.6.5
+è¾“å…¥ï¼š./bin/hadoop version 
+æˆåŠŸæ˜¾ç¤ºHadoopç‰ˆæœ¬ä¿¡æ¯ã€‚
 
-5.´´½¨hadoopÓÃ»§
+5.åˆ›å»ºhadoopç”¨æˆ·
 
 
 

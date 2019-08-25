@@ -48,7 +48,7 @@ public class Hw2Part1 {
       
     public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {
-      String[] itr = value.toString().split("\\s+");
+      String[] itr = value.toString().split("\\s+"); // 对一行内容进行拆分，\\s+表示一到多个空格,回车,换行等空白符， 
       
       if (itr.Length()!=3){
     	  return;
